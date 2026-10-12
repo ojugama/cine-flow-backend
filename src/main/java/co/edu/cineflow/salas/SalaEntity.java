@@ -1,6 +1,5 @@
 package co.edu.cineflow.salas;
 
-import co.edu.cineflow.peliculas.PeliculaEntity;
 import co.edu.cineflow.sucursales.SucursalEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

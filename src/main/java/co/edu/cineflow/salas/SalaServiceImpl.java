@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class SalaServiceImpl implements SalaService{
+public class SalaServiceImpl implements SalaService {
     private final SalaRepository salaRepository;
 
     public SalaServiceImpl(SalaRepository salaRepository) {
