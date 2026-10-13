@@ -19,7 +19,7 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Override
     @Transactional
     public PeliculaEntity create(PeliculaEntity in) {
-        if (peliculaRepository.existsByTitulo(in.getTitulo())) {
+        if (peliculaRepository.existsByTituloAndIsActivoTrue(in.getTitulo())) {
             throw new BusinessException("Ya existe una película registrada con ese título.");
         }
         return peliculaRepository.save(in);
@@ -41,7 +41,7 @@ public class PeliculaServiceImpl implements PeliculaService {
     public PeliculaEntity update(Long id, PeliculaEntity in) {
         PeliculaEntity existingPelicula = findById(id);
 
-        if (peliculaRepository.existsByTituloAndIdNot(in.getTitulo(), id)) {
+        if (peliculaRepository.existsByTituloAndIdNotAndIsActivoTrue(in.getTitulo(), id)) {
             throw new BusinessException("Ya existe una película registrada con ese título.");
         }
 

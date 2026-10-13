@@ -22,12 +22,8 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(AuthLoginDTO in) {
-        UsuarioEntity usuario = usuarioRepository.findByEmail(in.getEmail())
+        UsuarioEntity usuario = usuarioRepository.findByEmailAndIsActivoTrue(in.getEmail())
                 .orElseThrow(() -> new BusinessException("Las credenciales son inválidas."));
-
-        if (!usuario.getIsActivo()) {
-            throw new BusinessException("Las credenciales son inválidas.");
-        }
 
         if (!passwordEncoder.matches(in.getPassword(), usuario.getPassword())) {
             throw new BusinessException("Las credenciales son inválidas.");

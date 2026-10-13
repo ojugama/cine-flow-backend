@@ -2,7 +2,6 @@ package co.edu.cineflow.usuarios;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +18,9 @@ public class UsuarioUpdateDTO {
 
     @NotBlank(message = "Los nombres son obligatorios.")
     @Size(max = 100, message = "Los nombres deben tener máximo 100 caracteres.")
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s$)[A-Za-zÁÉÍÓÚáéíóúñÑ'\\- ]+$",
-            message = "Los nombres solo pueden contener letras, espacios intermedios, apóstrofes y guiones.")
     private String nombres;
 
     @NotBlank(message = "Los apellidos son obligatorios.")
     @Size(max = 100, message = "Los apellidos deben tener máximo 100 caracteres.")
-    @Pattern(regexp = "^(?!\\s)(?!.*\\s$)[A-Za-zÁÉÍÓÚáéíóúñÑ'\\- ]+$",
-            message = "Los apellidos solo pueden contener letras, espacios intermedios, apóstrofes y guiones.")
     private String apellidos;
 }

@@ -43,7 +43,7 @@ public class PeliculaController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         peliculaHandler.delete(id);
         return ResponseBuilder.ok("Se ha eliminado correctamente la película.");

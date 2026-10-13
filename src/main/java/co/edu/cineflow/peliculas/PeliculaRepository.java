@@ -11,7 +11,7 @@ public interface PeliculaRepository extends JpaRepository<PeliculaEntity, Long> 
 
     Optional<PeliculaEntity> findByIdAndIsActivoTrue(Long id);
 
-    boolean existsByTitulo(String titulo);
+    boolean existsByTituloAndIsActivoTrue(String titulo);
 
-    boolean existsByTituloAndIdNot(String titulo, Long id);
+    boolean existsByTituloAndIdNotAndIsActivoTrue(String titulo, Long id);
 }

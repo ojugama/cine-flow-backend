@@ -27,7 +27,7 @@ public class UsuarioController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UsuarioDTO>> findById(@PathVariable Long id) {
         return ResponseBuilder.ok("OK", usuarioHandler.findById(id));
     }
@@ -46,7 +46,7 @@ public class UsuarioController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         usuarioHandler.delete(id);
         return ResponseBuilder.ok("Se ha desactivado correctamente el usuario.");
@@ -56,8 +56,7 @@ public class UsuarioController {
     public ResponseEntity<ApiResponse<UsuarioDTO>> findMe(Principal principal) {
         String email = principal.getName();
 
-        return ResponseBuilder.ok("Se ha editado correctamente el usuario.",
-                usuarioHandler.findMe(email));
+        return ResponseBuilder.ok("OK", usuarioHandler.findMe(email));
     }
 
     @PutMapping("/me")

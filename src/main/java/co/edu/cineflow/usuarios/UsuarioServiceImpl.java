@@ -35,7 +35,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioEntity findById(Long id) {
-        return usuarioRepository.findById(id)
+        return usuarioRepository.findByIdAndIsActivoTrue(id)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID " + id + "."));
     }
 
@@ -64,13 +64,19 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public void delete(Long id) {
         UsuarioEntity existingUsuario = findById(id);
+
+        if ("ADMIN".equals(existingUsuario.getRol())) {
+            throw new BusinessException("No se puede desactivar una cuenta de otro administrador.");
+        }
+
         existingUsuario.setIsActivo(false);
+
         usuarioRepository.save(existingUsuario);
     }
 
     @Override
     public UsuarioEntity findByEmail(String email) {
-        return usuarioRepository.findByEmail(email)
+        return usuarioRepository.findByEmailAndIsActivoTrue(email)
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado con email " + email + "."));
     }
 
