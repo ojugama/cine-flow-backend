@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface FuncionService {
-    FuncionEntity create(FuncionEntity in, Long idPelicula);
+    FuncionEntity create(FuncionEntity in, Long idPelicula, Long idSala);
 
     FuncionEntity findById(Long id);
 
@@ -14,7 +14,7 @@ public interface FuncionService {
 
     List<FuncionEntity> findByPelicula(Long idPelicula);
 
-    FuncionEntity update(Long id, FuncionEntity in, Long idPelicula);
+    FuncionEntity update(Long id, FuncionEntity in, Long idPelicula, Long idSala);
 
     void delete(Long id);
 }

@@ -1,6 +1,7 @@
 package co.edu.cineflow.funciones;
 
 import co.edu.cineflow.peliculas.PeliculaEntity;
+import co.edu.cineflow.salas.SalaEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -23,13 +24,13 @@ public class FuncionEntity {
     @JoinColumn(name = "id_pelicula", nullable = false)
     private PeliculaEntity pelicula;
 
-    @Column(name = "id_sala", nullable = false)
-    private Long idSala;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_sala", nullable = false)
+    private SalaEntity sala;
 
     @Column(name = "fecha_hora_inicio", nullable = false)
     private LocalDateTime fechaHoraInicio;
 
-    @NotNull(message = "La fecha y hora de fin es requerida.")
     @Column(name = "fecha_hora_fin", nullable = false)
     private LocalDateTime fechaHoraFin;
 
