@@ -5,4 +5,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface SalaService {
     Page<SalaEntity> findAll(Pageable pageable);
+
+    SalaEntity findById(Long id);
 }

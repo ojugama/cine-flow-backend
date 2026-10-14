@@ -18,7 +18,8 @@ public class FuncionHandler {
 
     public FuncionDTO create(FuncionCreateDTO dto) {
         FuncionEntity entity = funcionMapper.toEntity(dto);
-        FuncionEntity saved = funcionService.create(entity, dto.getIdPelicula());
+        FuncionEntity saved = funcionService.create(entity, dto.getIdPelicula(), dto.getIdSala());
+
         return funcionMapper.toDTO(saved);
     }
 
@@ -38,7 +39,8 @@ public class FuncionHandler {
 
     public FuncionDTO update(Long id, FuncionUpdateDTO dto) {
         FuncionEntity entity = funcionMapper.toEntity(dto);
-        FuncionEntity updated = funcionService.update(id, entity, dto.getIdPelicula());
+        FuncionEntity updated = funcionService.update(id, entity, dto.getIdPelicula(), dto.getIdSala());
+
         return funcionMapper.toDTO(updated);
     }
 

@@ -8,9 +8,14 @@ public class SalaMapper {
         SalaDTO salaDTO = new SalaDTO();
 
         salaDTO.setId(salaEntity.getId());
-        salaDTO.setIdSucursal(salaEntity.getSucursal().getId());
         salaDTO.setNombre(salaEntity.getNombre());
         salaDTO.setFormato(salaEntity.getFormato());
+
+        if (salaEntity.getSucursal() != null) {
+            salaDTO.setIdSucursal(salaEntity.getSucursal().getId());
+            salaDTO.setNombreSucursal(salaEntity.getSucursal().getNombre());
+            salaDTO.setCiudadSucursal(salaEntity.getSucursal().getCiudad());
+        }
 
         return salaDTO;
     }

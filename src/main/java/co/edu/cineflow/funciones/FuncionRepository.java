@@ -19,7 +19,7 @@ public interface FuncionRepository extends JpaRepository<FuncionEntity, Long> {
     @Query("""
                 SELECT COUNT(f) > 0 
                 FROM FuncionEntity f 
-                WHERE f.idSala = :idSala 
+                WHERE f.sala.id = :idSala 
                   AND f.isActivo = true 
                   AND (:idFuncion IS NULL OR f.id != :idFuncion)
                   AND (f.fechaHoraInicio < :fin AND f.fechaHoraFin > :inicio)

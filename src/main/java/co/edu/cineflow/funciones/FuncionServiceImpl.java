@@ -4,6 +4,8 @@ import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
 import co.edu.cineflow.peliculas.PeliculaEntity;
 import co.edu.cineflow.peliculas.PeliculaService;
+import co.edu.cineflow.salas.SalaEntity;
+import co.edu.cineflow.salas.SalaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,28 +16,32 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class FuncionServiceImpl implements FuncionService {
-
     private final FuncionRepository funcionRepository;
     private final PeliculaService peliculaService;
+    private final SalaService salaService;
 
-    public FuncionServiceImpl(FuncionRepository funcionRepository, PeliculaService peliculaService) {
+    public FuncionServiceImpl(FuncionRepository funcionRepository, PeliculaService peliculaService, SalaService salaService) {
         this.funcionRepository = funcionRepository;
         this.peliculaService = peliculaService;
+        this.salaService = salaService;
     }
 
     @Override
     @Transactional
-    public FuncionEntity create(FuncionEntity in, Long idPelicula) {
-        if (in.getFechaHoraFin().isBefore(in.getFechaHoraInicio())) {
-            throw new BusinessException("La fecha de fin no puede ser anterior a la fecha de inicio.");
-        }
-
-        if (funcionRepository.existeCruceHorario(in.getIdSala(), in.getFechaHoraInicio(), in.getFechaHoraFin(), null)) {
-            throw new BusinessException("La sala ya tiene asignada una función en ese rango de horario.");
+    public FuncionEntity create(FuncionEntity in, Long idPelicula, Long idSala) {
+        if (!in.getFechaHoraFin().isAfter(in.getFechaHoraInicio())) {
+            throw new BusinessException("La fecha y hora de fin debe ser posterior a la de inicio.");
         }
 
         PeliculaEntity pelicula = peliculaService.findById(idPelicula);
+        SalaEntity sala = salaService.findById(idSala);
+
+        if (funcionRepository.existeCruceHorario(idSala, in.getFechaHoraInicio(), in.getFechaHoraFin(), null)) {
+            throw new BusinessException("La sala ya tiene asignada una función en ese rango de horario.");
+        }
+
         in.setPelicula(pelicula);
+        in.setSala(sala);
 
         return funcionRepository.save(in);
     }
@@ -58,21 +64,22 @@ public class FuncionServiceImpl implements FuncionService {
 
     @Override
     @Transactional
-    public FuncionEntity update(Long id, FuncionEntity in, Long idPelicula) {
+    public FuncionEntity update(Long id, FuncionEntity in, Long idPelicula, Long idSala) {
         FuncionEntity existing = findById(id);
 
-        if (in.getFechaHoraFin().isBefore(in.getFechaHoraInicio())) {
-            throw new BusinessException("La fecha de fin no puede ser anterior a la fecha de inicio.");
-        }
-
-        if (funcionRepository.existeCruceHorario(in.getIdSala(), in.getFechaHoraInicio(), in.getFechaHoraFin(), id)) {
-            throw new BusinessException("La sala ya tiene asignada una función en ese rango de horario.");
+        if (!in.getFechaHoraFin().isAfter(in.getFechaHoraInicio())) {
+            throw new BusinessException("La fecha y hora de fin debe ser posterior a la de inicio.");
         }
 
         PeliculaEntity pelicula = peliculaService.findById(idPelicula);
+        SalaEntity sala = salaService.findById(idSala);
+
+        if (funcionRepository.existeCruceHorario(idSala, in.getFechaHoraInicio(), in.getFechaHoraFin(), id)) {
+            throw new BusinessException("La sala ya tiene asignada una función en ese rango de horario.");
+        }
 
         existing.setPelicula(pelicula);
-        existing.setIdSala(in.getIdSala());
+        existing.setSala(sala);
         existing.setFechaHoraInicio(in.getFechaHoraInicio());
         existing.setFechaHoraFin(in.getFechaHoraFin());
 
@@ -84,6 +91,7 @@ public class FuncionServiceImpl implements FuncionService {
     public void delete(Long id) {
         FuncionEntity existing = findById(id);
         existing.setIsActivo(false);
+        
         funcionRepository.save(existing);
     }
 }
