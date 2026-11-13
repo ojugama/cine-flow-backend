@@ -2,6 +2,7 @@ package co.edu.cineflow.funciones;
 
 import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
+import co.edu.cineflow.common.mongo.SequenceService;
 import co.edu.cineflow.peliculas.PeliculaEntity;
 import co.edu.cineflow.peliculas.PeliculaService;
 import co.edu.cineflow.salas.SalaEntity;
@@ -9,25 +10,25 @@ import co.edu.cineflow.salas.SalaService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class FuncionServiceImpl implements FuncionService {
     private final FuncionRepository funcionRepository;
     private final PeliculaService peliculaService;
     private final SalaService salaService;
+    private final SequenceService sequenceService;
 
-    public FuncionServiceImpl(FuncionRepository funcionRepository, PeliculaService peliculaService, SalaService salaService) {
+    public FuncionServiceImpl(FuncionRepository funcionRepository, PeliculaService peliculaService,
+                              SalaService salaService, SequenceService sequenceService) {
         this.funcionRepository = funcionRepository;
         this.peliculaService = peliculaService;
         this.salaService = salaService;
+        this.sequenceService = sequenceService;
     }
 
     @Override
-    @Transactional
     public FuncionEntity create(FuncionEntity in, Long idPelicula, Long idSala) {
         if (!in.getFechaHoraFin().isAfter(in.getFechaHoraInicio())) {
             throw new BusinessException("La fecha y hora de fin debe ser posterior a la de inicio.");
@@ -40,6 +41,7 @@ public class FuncionServiceImpl implements FuncionService {
             throw new BusinessException("La sala ya tiene asignada una función en ese rango de horario.");
         }
 
+        in.setId(sequenceService.next("funciones"));
         in.setPelicula(pelicula);
         in.setSala(sala);
 
@@ -63,7 +65,6 @@ public class FuncionServiceImpl implements FuncionService {
     }
 
     @Override
-    @Transactional
     public FuncionEntity update(Long id, FuncionEntity in, Long idPelicula, Long idSala) {
         FuncionEntity existing = findById(id);
 
@@ -87,7 +88,6 @@ public class FuncionServiceImpl implements FuncionService {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         FuncionEntity existing = findById(id);
         existing.setIsActivo(false);

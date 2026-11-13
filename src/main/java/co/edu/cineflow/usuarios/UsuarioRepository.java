@@ -2,11 +2,11 @@ package co.edu.cineflow.usuarios;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
+public interface UsuarioRepository extends MongoRepository<UsuarioEntity, Long> {
     Page<UsuarioEntity> findAllByIsActivoTrue(Pageable pageable);
 
     Optional<UsuarioEntity> findByIdAndIsActivoTrue(Long id);

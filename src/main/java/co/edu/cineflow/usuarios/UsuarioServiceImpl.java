@@ -2,30 +2,32 @@ package co.edu.cineflow.usuarios;
 
 import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
+import co.edu.cineflow.common.mongo.SequenceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SequenceService sequenceService;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
+                              SequenceService sequenceService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.sequenceService = sequenceService;
     }
 
     @Override
-    @Transactional
     public UsuarioEntity create(UsuarioEntity in) {
         if (usuarioRepository.existsByEmail(in.getEmail())) {
             throw new BusinessException("El email ya se encuentra registrado.");
         }
 
+        in.setId(sequenceService.next("usuarios"));
         in.setPassword(passwordEncoder.encode(in.getPassword()));
 
         in.setRol("CLIENTE");
@@ -45,7 +47,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional
     public UsuarioEntity update(Long id, UsuarioEntity in) {
         UsuarioEntity existingUsuario = findById(id);
 
@@ -61,7 +62,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         UsuarioEntity existingUsuario = findById(id);
 
@@ -81,7 +81,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional
     public UsuarioEntity update(String email, UsuarioEntity in) {
         UsuarioEntity usuario = findByEmail(email);
 
@@ -97,7 +96,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional
     public void delete(String email) {
         UsuarioEntity usuario = findByEmail(email);
         usuario.setIsActivo(false);
@@ -105,7 +103,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    @Transactional
     public void updatePassword(String email, UsuarioPasswordUpdateDTO in) {
         UsuarioEntity usuario = findByEmail(email);
 

@@ -2,26 +2,27 @@ package co.edu.cineflow.peliculas;
 
 import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
+import co.edu.cineflow.common.mongo.SequenceService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
 public class PeliculaServiceImpl implements PeliculaService {
     private final PeliculaRepository peliculaRepository;
+    private final SequenceService sequenceService;
 
-    public PeliculaServiceImpl(PeliculaRepository peliculaRepository) {
+    public PeliculaServiceImpl(PeliculaRepository peliculaRepository, SequenceService sequenceService) {
         this.peliculaRepository = peliculaRepository;
+        this.sequenceService = sequenceService;
     }
 
     @Override
-    @Transactional
     public PeliculaEntity create(PeliculaEntity in) {
         if (peliculaRepository.existsByTituloAndIsActivoTrue(in.getTitulo())) {
             throw new BusinessException("Ya existe una película registrada con ese título.");
         }
+        in.setId(sequenceService.next("peliculas"));
         return peliculaRepository.save(in);
     }
 
@@ -37,7 +38,6 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    @Transactional
     public PeliculaEntity update(Long id, PeliculaEntity in) {
         PeliculaEntity existingPelicula = findById(id);
 
@@ -54,7 +54,6 @@ public class PeliculaServiceImpl implements PeliculaService {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         PeliculaEntity existingPelicula = findById(id);
         existingPelicula.setIsActivo(false);

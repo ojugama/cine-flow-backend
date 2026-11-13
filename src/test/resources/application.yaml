@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/cineflow-test
+      auto-index-creation: false
+JWT_SECRET: cineflow-test-secret-key-0123456789abcdefghijklmnopqrstuvwxyz
+ADMIN_PASSWORD: cineflow-test-admin

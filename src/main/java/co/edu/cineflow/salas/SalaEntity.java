@@ -1,28 +1,25 @@
 package co.edu.cineflow.salas;
 
 import co.edu.cineflow.sucursales.SucursalEntity;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "salas")
+@Document(collection = "salas")
 public class SalaEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal", nullable = false)
+    @DBRef
     private SucursalEntity sucursal;
 
-    @Column(name = "nombre", length = 50, nullable = false)
     private String nombre;
 
-    @Column(name = "formato", length = 50, nullable = false)
     private String formato;
 }
