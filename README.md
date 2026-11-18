@@ -30,9 +30,11 @@ El proyecto sigue una estricta separación de responsabilidades:
 * `peliculas`: Catálogo de películas (CRUD completo).
 * `funciones`: Asignación de películas a salas con validación de rangos de fecha y hora.
 * `salas` y `sucursales`: Catálogos de la infraestructura física del cine.
+* `combos`: Catálogo de combos de confitería disponibles para la compra.
+* `compras`: Adquisición de boletas (sillas) y combos de comida con validación de disponibilidad, precios por formato de sala e historial de compras por usuario.
 
 ## Datos iniciales
-Al iniciar con una base vacía, la aplicación crea el usuario administrador y un catálogo de demostración (sucursales, salas, películas y funciones). Estos seeders se desactivan con el perfil `test`.
+Al iniciar con una base vacía, la aplicación crea el usuario administrador y un catálogo de demostración (sucursales, salas, películas, funciones y combos). Estos seeders se desactivan con el perfil `test`.
 
 ## Ejecución Local
 1. Clona el repositorio.

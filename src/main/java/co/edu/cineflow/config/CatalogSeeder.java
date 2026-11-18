@@ -1,5 +1,7 @@
 package co.edu.cineflow.config;
 
+import co.edu.cineflow.combos.ComboEntity;
+import co.edu.cineflow.combos.ComboRepository;
 import co.edu.cineflow.common.mongo.SequenceService;
 import co.edu.cineflow.funciones.FuncionEntity;
 import co.edu.cineflow.funciones.FuncionRepository;
@@ -26,7 +28,7 @@ public class CatalogSeeder {
     @Bean
     public CommandLineRunner initCatalog(SucursalRepository sucursalRepository, SalaRepository salaRepository,
                                          PeliculaRepository peliculaRepository, FuncionRepository funcionRepository,
-                                         SequenceService sequenceService) {
+                                         ComboRepository comboRepository, SequenceService sequenceService) {
         return args -> {
             List<SucursalEntity> sucursales = sucursalRepository.count() == 0
                     ? crearSucursales(sucursalRepository, sequenceService)
@@ -42,6 +44,10 @@ public class CatalogSeeder {
 
             if (funcionRepository.count() == 0 && !salas.isEmpty() && !peliculas.isEmpty()) {
                 crearFunciones(funcionRepository, sequenceService, salas, peliculas);
+            }
+
+            if (comboRepository.count() == 0) {
+                crearCombos(comboRepository, sequenceService);
             }
         };
     }
@@ -142,5 +148,31 @@ public class CatalogSeeder {
                 repository.save(funcion);
             }
         }
+    }
+
+    private void crearCombos(ComboRepository repository, SequenceService sequenceService) {
+        crearCombo(repository, sequenceService, "Combo clásico",
+                "Crispetas medianas y una gaseosa de 16 oz.", 22000, "fa-bowl-food");
+        crearCombo(repository, sequenceService, "Combo pareja",
+                "Crispetas grandes y dos gaseosas de 16 oz.", 35000, "fa-heart");
+        crearCombo(repository, sequenceService, "Combo familiar",
+                "Crispetas jumbo, cuatro gaseosas y dos perros calientes.", 58000, "fa-people-group");
+        crearCombo(repository, sequenceService, "Combo nachos",
+                "Nachos con queso cheddar y una gaseosa de 16 oz.", 28000, "fa-utensils");
+        crearCombo(repository, sequenceService, "Combo dulce",
+                "Caja de chocolatinas surtidas y una gaseosa de 16 oz.", 19000, "fa-cookie-bite");
+        crearCombo(repository, sequenceService, "Combo saludable",
+                "Fruta picada, agua sin gas y galletas integrales.", 20000, "fa-apple-whole");
+    }
+
+    private ComboEntity crearCombo(ComboRepository repository, SequenceService sequenceService,
+                                   String nombre, String descripcion, Integer precio, String icono) {
+        ComboEntity combo = new ComboEntity();
+        combo.setId(sequenceService.next("combos"));
+        combo.setNombre(nombre);
+        combo.setDescripcion(descripcion);
+        combo.setPrecio(precio);
+        combo.setIcono(icono);
+        return repository.save(combo);
     }
 }

@@ -3,6 +3,7 @@ package co.edu.cineflow.funciones;
 import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
 import co.edu.cineflow.common.mongo.SequenceService;
+import co.edu.cineflow.compras.CompraRepository;
 import co.edu.cineflow.peliculas.PeliculaEntity;
 import co.edu.cineflow.peliculas.PeliculaService;
 import co.edu.cineflow.salas.SalaEntity;
@@ -18,13 +19,16 @@ public class FuncionServiceImpl implements FuncionService {
     private final FuncionRepository funcionRepository;
     private final PeliculaService peliculaService;
     private final SalaService salaService;
+    private final CompraRepository compraRepository;
     private final SequenceService sequenceService;
 
     public FuncionServiceImpl(FuncionRepository funcionRepository, PeliculaService peliculaService,
-                              SalaService salaService, SequenceService sequenceService) {
+                              SalaService salaService, CompraRepository compraRepository,
+                              SequenceService sequenceService) {
         this.funcionRepository = funcionRepository;
         this.peliculaService = peliculaService;
         this.salaService = salaService;
+        this.compraRepository = compraRepository;
         this.sequenceService = sequenceService;
     }
 
@@ -90,8 +94,13 @@ public class FuncionServiceImpl implements FuncionService {
     @Override
     public void delete(Long id) {
         FuncionEntity existing = findById(id);
+
+        if (!compraRepository.findByFuncionIdAndIsActivoTrue(id).isEmpty()) {
+            throw new BusinessException("No se puede eliminar la función porque ya tiene boletas adquiridas asociadas.");
+        }
+
         existing.setIsActivo(false);
-        
+
         funcionRepository.save(existing);
     }
 }

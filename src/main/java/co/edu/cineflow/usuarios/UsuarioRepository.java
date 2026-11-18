@@ -16,4 +16,6 @@ public interface UsuarioRepository extends MongoRepository<UsuarioEntity, Long> 
     boolean existsByEmailAndIdNot(String email, Long id);
 
     Optional<UsuarioEntity> findByEmailAndIsActivoTrue(String email);
+
+    UsuarioEntity findByEmail(String mail);
 }

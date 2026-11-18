@@ -3,17 +3,23 @@ package co.edu.cineflow.peliculas;
 import co.edu.cineflow.common.exception.BusinessException;
 import co.edu.cineflow.common.exception.NotFoundException;
 import co.edu.cineflow.common.mongo.SequenceService;
+import co.edu.cineflow.funciones.FuncionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PeliculaServiceImpl implements PeliculaService {
     private final PeliculaRepository peliculaRepository;
+    private final FuncionRepository funcionRepository;
     private final SequenceService sequenceService;
 
-    public PeliculaServiceImpl(PeliculaRepository peliculaRepository, SequenceService sequenceService) {
+    public PeliculaServiceImpl(PeliculaRepository peliculaRepository, FuncionRepository funcionRepository,
+                               SequenceService sequenceService) {
         this.peliculaRepository = peliculaRepository;
+        this.funcionRepository = funcionRepository;
         this.sequenceService = sequenceService;
     }
 
@@ -56,6 +62,14 @@ public class PeliculaServiceImpl implements PeliculaService {
     @Override
     public void delete(Long id) {
         PeliculaEntity existingPelicula = findById(id);
+
+        boolean tieneFuncionesActivas = funcionRepository.findByPeliculaIdAndIsActivoTrue(id).stream()
+                .anyMatch(f -> f.getFechaHoraFin() != null && f.getFechaHoraFin().isAfter(LocalDateTime.now()));
+
+        if (tieneFuncionesActivas) {
+            throw new BusinessException("No se puede eliminar la película porque tiene funciones activas programadas o en curso.");
+        }
+
         existingPelicula.setIsActivo(false);
         peliculaRepository.save(existingPelicula);
     }

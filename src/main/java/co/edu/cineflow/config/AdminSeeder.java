@@ -30,6 +30,13 @@ public class AdminSeeder {
                 admin.setApellidos("Principal");
 
                 usuarioRepository.save(admin);
+            } else {
+                UsuarioEntity admin = usuarioRepository.findByEmail("admin@cineflow.co");
+                admin.setPassword(passwordEncoder.encode(adminPassword));
+                admin.setIsActivo(true);
+                admin.setRol("ADMIN");
+
+                usuarioRepository.save(admin);
             }
         };
     }
