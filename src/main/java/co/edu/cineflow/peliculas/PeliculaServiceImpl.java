@@ -55,7 +55,15 @@ public class PeliculaServiceImpl implements PeliculaService {
         existingPelicula.setSinopsis(in.getSinopsis());
         existingPelicula.setDuracionMinutos(in.getDuracionMinutos());
         existingPelicula.setGenero(in.getGenero());
+        existingPelicula.setImagenUrl(in.getImagenUrl());
 
+        return peliculaRepository.save(existingPelicula);
+    }
+
+    @Override
+    public PeliculaEntity actualizarImagen(Long id, String imagenUrl) {
+        PeliculaEntity existingPelicula = findById(id);
+        existingPelicula.setImagenUrl(imagenUrl);
         return peliculaRepository.save(existingPelicula);
     }
 

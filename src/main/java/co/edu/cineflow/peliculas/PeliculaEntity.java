@@ -22,5 +22,7 @@ public class PeliculaEntity {
 
     private String genero;
 
+    private String imagenUrl;
+
     private Boolean isActivo = true;
 }

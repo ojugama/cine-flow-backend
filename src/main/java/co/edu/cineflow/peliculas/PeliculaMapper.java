@@ -12,6 +12,7 @@ public class PeliculaMapper {
         peliculaDTO.setSinopsis(peliculaEntity.getSinopsis());
         peliculaDTO.setDuracionMinutos(peliculaEntity.getDuracionMinutos());
         peliculaDTO.setGenero(peliculaEntity.getGenero());
+        peliculaDTO.setImagenUrl(peliculaEntity.getImagenUrl());
         peliculaDTO.setIsActivo(peliculaEntity.getIsActivo());
 
         return peliculaDTO;
@@ -24,6 +25,7 @@ public class PeliculaMapper {
         peliculaEntity.setSinopsis(peliculaDTO.getSinopsis());
         peliculaEntity.setDuracionMinutos(peliculaDTO.getDuracionMinutos());
         peliculaEntity.setGenero(peliculaDTO.getGenero());
+        peliculaEntity.setImagenUrl(peliculaDTO.getImagenUrl());
 
         return peliculaEntity;
     }
@@ -35,6 +37,7 @@ public class PeliculaMapper {
         peliculaEntity.setSinopsis(peliculaDto.getSinopsis());
         peliculaEntity.setDuracionMinutos(peliculaDto.getDuracionMinutos());
         peliculaEntity.setGenero(peliculaDto.getGenero());
+        peliculaEntity.setImagenUrl(peliculaDto.getImagenUrl());
 
         return peliculaEntity;
     }

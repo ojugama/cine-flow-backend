@@ -8,4 +8,11 @@ spring:
   data:
     mongodb:
       auto-index-creation: true
-      
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+cineflow:
+  uploads:
+    dir: uploads

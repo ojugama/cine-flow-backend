@@ -12,5 +12,7 @@ public interface PeliculaService {
 
     PeliculaEntity update(Long id, PeliculaEntity in);
 
+    PeliculaEntity actualizarImagen(Long id, String imagenUrl);
+
     void delete(Long id);
 }

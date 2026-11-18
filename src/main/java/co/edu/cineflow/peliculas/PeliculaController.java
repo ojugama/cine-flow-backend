@@ -6,9 +6,11 @@ import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/peliculas")
@@ -40,6 +42,14 @@ public class PeliculaController {
     public ResponseEntity<ApiResponse<PeliculaDTO>> update(@PathVariable Long id,
                                                            @Valid @RequestBody PeliculaUpdateDTO in) {
         return ResponseBuilder.ok("Se ha editado correctamente la película.", peliculaHandler.update(id, in));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/{id}/imagen", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<PeliculaDTO>> subirImagen(@PathVariable Long id,
+                                                                @RequestPart("imagen") MultipartFile imagen) {
+        return ResponseBuilder.ok("Se ha actualizado la imagen de la película.",
+                peliculaHandler.actualizarImagen(id, imagen));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

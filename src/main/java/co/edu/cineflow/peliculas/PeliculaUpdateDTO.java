@@ -25,4 +25,7 @@ public class PeliculaUpdateDTO {
 
     @Size(max = 100, message = "El género debe tener máximo 100 caracteres.")
     private String genero;
+
+    @Size(max = 500, message = "La URL de la imagen debe tener máximo 500 caracteres.")
+    private String imagenUrl;
 }
